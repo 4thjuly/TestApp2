@@ -14,6 +14,8 @@
 		3C0D75DA1B22A9B200720A7D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C0D75D91B22A9B200720A7D /* Images.xcassets */; };
 		3C0D75DD1B22A9B200720A7D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C0D75DB1B22A9B200720A7D /* LaunchScreen.xib */; };
 		3C0D75E91B22A9B200720A7D /* TestApp1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0D75E81B22A9B200720A7D /* TestApp1Tests.m */; };
+		3C82F1461B23BC53009C2CC1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */; };
+		3C82F1471B23BC90009C2CC1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,7 @@
 		3C0D75E21B22A9B200720A7D /* TestApp1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestApp1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C0D75E71B22A9B200720A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C0D75E81B22A9B200720A7D /* TestApp1Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestApp1Tests.m; sourceTree = "<group>"; };
+		3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C82F1471B23BC90009C2CC1 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C82F1461B23BC53009C2CC1 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +68,7 @@
 		3C0D75C01B22A9B200720A7D = {
 			isa = PBXGroup;
 			children = (
+				3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */,
 				3C0D75CB1B22A9B200720A7D /* TestApp1 */,
 				3C0D75E51B22A9B200720A7D /* TestApp1Tests */,
 				3C0D75CA1B22A9B200720A7D /* Products */,
@@ -418,6 +424,7 @@
 				3C0D75EE1B22A9B200720A7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3C0D75EF1B22A9B200720A7D /* Build configuration list for PBXNativeTarget "TestApp1Tests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +433,7 @@
 				3C0D75F11B22A9B200720A7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
