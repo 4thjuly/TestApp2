@@ -38,6 +38,7 @@
     
     [mLocationManager startUpdatingLocation];
     
+    // TODO - Add a 30s timer
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,7 +48,10 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [self.text appendString:@"didUpdateLocations\r\n"];
+    CLLocation *location = [locations lastObject];
+    [self.text appendString:[NSString stringWithFormat:@"%@\r\n", location.description]];
     [self.textView setText:self.text];
+    [self.textView scrollRangeToVisible: NSMakeRange(self.text.length, 0)];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -56,18 +60,24 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error {
-    [self.text appendString:@"didFinishDeferredUpdatesWithError"];
+    [self.text appendString:@"didFinishDeferredUpdatesWithError\r\n"];
     [self.textView setText:self.text];
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-    [self.text appendString:@"locationManagerDidPauseLocationUpdates"];
+    [self.text appendString:@"locationManagerDidPauseLocationUpdates\r\n"];
     [self.textView setText:self.text];
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
-    [self.text appendString:@"locationManagerDidResumeLocationUpdates"];
+    [self.text appendString:@"locationManagerDidResumeLocationUpdates\r\n"];
     [self.textView setText:self.text];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    [self.text appendString:@"didChangeAuthorizationStatus\r\n"];
+    [self.textView setText:self.text];
+    
 }
 
 @end
