@@ -14,6 +14,7 @@
 		3C0D75DA1B22A9B200720A7D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C0D75D91B22A9B200720A7D /* Images.xcassets */; };
 		3C0D75DD1B22A9B200720A7D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C0D75DB1B22A9B200720A7D /* LaunchScreen.xib */; };
 		3C0D75E91B22A9B200720A7D /* TestApp1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0D75E81B22A9B200720A7D /* TestApp1Tests.m */; };
+		3C3ED53D1B2611F900980E2B /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C3ED53C1B2611F900980E2B /* CoreBluetooth.framework */; };
 		3C82F1461B23BC53009C2CC1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */; };
 		3C82F1471B23BC90009C2CC1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
@@ -42,6 +43,7 @@
 		3C0D75E21B22A9B200720A7D /* TestApp1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestApp1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C0D75E71B22A9B200720A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C0D75E81B22A9B200720A7D /* TestApp1Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestApp1Tests.m; sourceTree = "<group>"; };
+		3C3ED53C1B2611F900980E2B /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -50,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C3ED53D1B2611F900980E2B /* CoreBluetooth.framework in Frameworks */,
 				3C82F1471B23BC90009C2CC1 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,6 +71,7 @@
 		3C0D75C01B22A9B200720A7D = {
 			isa = PBXGroup;
 			children = (
+				3C3ED53C1B2611F900980E2B /* CoreBluetooth.framework */,
 				3C82F1441B23B57A009C2CC1 /* CoreLocation.framework */,
 				3C0D75CB1B22A9B200720A7D /* TestApp1 */,
 				3C0D75E51B22A9B200720A7D /* TestApp1Tests */,
@@ -174,6 +178,7 @@
 				TargetAttributes = {
 					3C0D75C81B22A9B200720A7D = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = 6KQ9LJ3XC2;
 					};
 					3C0D75E11B22A9B200720A7D = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -355,9 +360,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TestApp1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -365,9 +373,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TestApp1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

@@ -10,22 +10,27 @@
 
 @interface ViewController ()
 
-@property NSMutableString *text;
-
 @end
 
 @implementation ViewController {
     CLLocationManager *mLocationManager;
+    CBPeripheralManager *mPeripheralManager;
+    NSMutableString *mText;
+}
+
+- (void)updateStatusText:(NSString*)text {
+    [mText appendString:[NSString stringWithFormat:@"%@\r\n", text]];
+    [self.textView setText:mText];
+    [self.textView scrollRangeToVisible: NSMakeRange(mText.length, 0)];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.text = [NSMutableString stringWithCapacity:100];
-    [self.text appendString:@"Starting...\r\n"];
-    [self.text appendString:@"Still starting...\r\n"];
-    [self.textView setText:self.text];
+    mText = [NSMutableString stringWithCapacity:100];
+    [self updateStatusText:@"Starting..."];
     
+    // Location
     if (mLocationManager == nil) mLocationManager = [[CLLocationManager alloc] init];
     
     mLocationManager.delegate = self;
@@ -36,9 +41,12 @@
         [mLocationManager requestWhenInUseAuthorization];
     }
     
+    // TODO - Add a 30s timer
     [mLocationManager startUpdatingLocation];
     
-    // TODO - Add a 30s timer
+    // Bluetooth LE
+    mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:nil];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,37 +55,58 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    [self.text appendString:@"didUpdateLocations\r\n"];
+    [self updateStatusText:@"didUpdateLocations..."];
+
     CLLocation *location = [locations lastObject];
-    [self.text appendString:[NSString stringWithFormat:@"%@\r\n", location.description]];
-    [self.textView setText:self.text];
-    [self.textView scrollRangeToVisible: NSMakeRange(self.text.length, 0)];
+    [self updateStatusText:location.description];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [self.text appendString:@"didFailWithError\r\n"];
-    [self.textView setText:self.text];
+    [self updateStatusText:@"didFailWithError"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error {
-    [self.text appendString:@"didFinishDeferredUpdatesWithError\r\n"];
-    [self.textView setText:self.text];
+    [self updateStatusText:@"didFinishDeferredUpdatesWithError"];
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-    [self.text appendString:@"locationManagerDidPauseLocationUpdates\r\n"];
-    [self.textView setText:self.text];
+    [self updateStatusText:@"locationManagerDidPauseLocationUpdates"];
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
-    [self.text appendString:@"locationManagerDidResumeLocationUpdates\r\n"];
-    [self.textView setText:self.text];
+    [self updateStatusText:@"locationManagerDidResumeLocationUpdates"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    [self.text appendString:@"didChangeAuthorizationStatus\r\n"];
-    [self.textView setText:self.text];
+    [self updateStatusText:@"didChangeAuthorizationStatus"];
+}
+
+- (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral {
+    [self updateStatusText:@"peripheralManagerDidUpdateState"];
     
+    // TODO - Is this necessary?
+    CBUUID *serviceUUID = [CBUUID UUIDWithString:@"CE5C0BF3-B9B0-4A22-847B-74834A70BB93"];
+    CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
+    [mPeripheralManager addService:service];
+    
+    [mPeripheralManager startAdvertising:@{CBAdvertisementDataServiceUUIDsKey : @[serviceUUID], CBAdvertisementDataLocalNameKey:@"CARD"}];
+    
+}
+
+- (void)peripheralManager:(CBPeripheralManager *)peripheral didAddService:(CBService *)service error:(NSError *)error {
+    [self updateStatusText:@"didAddService"];
+
+    if (error) {
+        NSLog(@"Error publishing service: %@", [error localizedDescription]);
+    }
+}
+
+- (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error {
+    [self updateStatusText:@"peripheralManagerDidStartAdvertising"];
+
+    if (error) {
+        NSLog(@"Error advertising: %@", [error localizedDescription]);
+    }
 }
 
 @end

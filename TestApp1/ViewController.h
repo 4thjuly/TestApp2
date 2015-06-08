@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface ViewController : UIViewController <CLLocationManagerDelegate>
+@import CoreBluetooth;
+
+@interface ViewController : UIViewController <CLLocationManagerDelegate, CBPeripheralManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
+
+- (void)updateStatusText:(NSString*)text;
 
 @end
