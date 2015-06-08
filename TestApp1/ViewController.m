@@ -6,6 +6,10 @@
 //  Copyright (c) 2015 Ian Ellison-Taylor. All rights reserved.
 //
 
+// TODO
+// Add menu items for geo and scan
+// Add BTLE Central role
+
 #import "ViewController.h"
 
 @interface ViewController ()
@@ -45,8 +49,8 @@
     [mLocationManager startUpdatingLocation];
     
     // Bluetooth LE
-    mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:nil];
-
+    mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:@{CBPeripheralManagerOptionShowPowerAlertKey : @1}];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,15 +85,27 @@
     [self updateStatusText:@"didChangeAuthorizationStatus"];
 }
 
-- (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral {
+- (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheralManager {
     [self updateStatusText:@"peripheralManagerDidUpdateState"];
     
-    // TODO - Is this necessary?
     CBUUID *serviceUUID = [CBUUID UUIDWithString:@"CE5C0BF3-B9B0-4A22-847B-74834A70BB93"];
-    CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
-    [mPeripheralManager addService:service];
+    CBUUID *extraUUID = [CBUUID UUIDWithString:@"9999"]; // TODO - Random 16bit number
     
-    [mPeripheralManager startAdvertising:@{CBAdvertisementDataServiceUUIDsKey : @[serviceUUID], CBAdvertisementDataLocalNameKey:@"CARD"}];
+    // FYI - Setting the service isn't necessary if you're just advertising
+    // CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
+    // [mPeripheralManager addService:service];
+    
+    if (peripheralManager.state == CBPeripheralManagerStatePoweredOn) {
+        [self updateStatusText:@"peripheralManagerDidUpdateState: State On"];
+        if (peripheralManager.isAdvertising) {
+            [self updateStatusText:@"peripheralManagerDidUpdateState: Already Avertising"];
+        } else {
+            [self updateStatusText:@"peripheralManagerDidUpdateState: startAdvertising"];
+            [peripheralManager startAdvertising:@{CBAdvertisementDataServiceUUIDsKey : @[serviceUUID, extraUUID], CBAdvertisementDataLocalNameKey:@"CARD: Testing"}];
+        }
+    } else {
+        [self updateStatusText:@"peripheralManagerDidUpdateState: State off"];
+    }
     
 }
 
@@ -102,10 +118,11 @@
 }
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error {
-    [self updateStatusText:@"peripheralManagerDidStartAdvertising"];
-
     if (error) {
         NSLog(@"Error advertising: %@", [error localizedDescription]);
+        [self updateStatusText:@"peripheralManagerDidStartAdvertising: Error"];
+    } else {
+        [self updateStatusText:@"peripheralManagerDidStartAdvertising"];
     }
 }
 

@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>B1657808-4786-4227-945E-609E61FADE30</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>TestApp1</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>11DA3837ABD15DDE1259DCE88C1061D250B42C36</key>
 		<string>https://github.com/4thjuly/TestApp2.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>TestApp1.xcodeproj/project.xcworkspace</string>
+	<string>TestApp1.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>11DA3837ABD15DDE1259DCE88C1061D250B42C36</key>
