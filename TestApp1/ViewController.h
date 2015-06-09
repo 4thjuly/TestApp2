@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 - (void)updateStatusText:(NSString*)text;
+- (IBAction)doToolbarAction:(UIButton*)sender;
 
 @end

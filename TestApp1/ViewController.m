@@ -8,6 +8,7 @@
 
 // TODO
 // Add menu items for geo and scan
+// Try using characteristic data to share id
 // Add BTLE Central role
 
 #import "ViewController.h"
@@ -16,11 +17,18 @@
 
 @end
 
+
 @implementation ViewController {
     CLLocationManager *mLocationManager;
     CBPeripheralManager *mPeripheralManager;
     NSMutableString *mText;
 }
+
+enum {
+    kGeoScanTag = 1,
+    kBTLEScanTag,
+    kTBDTag
+};
 
 - (void)updateStatusText:(NSString*)text {
     [mText appendString:[NSString stringWithFormat:@"%@\r\n", text]];
@@ -90,10 +98,18 @@
     
     CBUUID *serviceUUID = [CBUUID UUIDWithString:@"CE5C0BF3-B9B0-4A22-847B-74834A70BB93"];
     CBUUID *extraUUID = [CBUUID UUIDWithString:@"9999"]; // TODO - Random 16bit number
+    CBUUID *characteristicUUID = [CBUUID UUIDWithString:@"EF72F7D6-D68C-4F5C-8D89-50BEBC66681A"];
+    UInt32 id  = 0xF00F00;
     
     // FYI - Setting the service isn't necessary if you're just advertising
-    // CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
-    // [mPeripheralManager addService:service];
+    CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
+    CBMutableCharacteristic *characteristic = [[CBMutableCharacteristic alloc] initWithType:characteristicUUID
+        properties:CBCharacteristicPropertyRead value:[[NSData alloc] initWithBytes:&id length:sizeof(id)]
+        permissions:CBAttributePermissionsReadable];
+    service.characteristics = @[characteristic];
+    
+    [mPeripheralManager addService:service];
+    
     
     if (peripheralManager.state == CBPeripheralManagerStatePoweredOn) {
         [self updateStatusText:@"peripheralManagerDidUpdateState: State On"];
@@ -125,5 +141,23 @@
         [self updateStatusText:@"peripheralManagerDidStartAdvertising"];
     }
 }
+
+- (IBAction)doToolbarAction:(UIButton*)sender {
+    [self updateStatusText:[NSString stringWithFormat:@"Action: %ld", (long)sender.tag]];
+    
+    if (sender.tag == kGeoScanTag) {
+    
+    }
+    
+    if (sender.tag == kBTLEScanTag) {
+        
+    }
+}
+
+- (void)respondToRequest:(CBATTRequest *)request withResult:(CBATTError)result {
+    [self updateStatusText:@"respondToRequest"];
+    
+}
+
 
 @end
