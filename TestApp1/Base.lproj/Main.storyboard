@@ -37,12 +37,12 @@
                                             <action selector="doToolbarAction:" destination="BYZ-38-t0r" id="VOC-8F-Nxb"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem tag="2" title="BTLE" id="IK5-g5-2XT">
+                                    <barButtonItem tag="2" title="Send" id="IK5-g5-2XT">
                                         <connections>
                                             <action selector="doToolbarAction:" destination="BYZ-38-t0r" id="QN0-b0-FEk"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem tag="3" title="[TBD]" id="w7I-Bh-lx0">
+                                    <barButtonItem tag="3" title="Recv" id="w7I-Bh-lx0">
                                         <connections>
                                             <action selector="doToolbarAction:" destination="BYZ-38-t0r" id="Xkr-KB-77M"/>
                                         </connections>

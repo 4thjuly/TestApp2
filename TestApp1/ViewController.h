@@ -11,7 +11,7 @@
 
 @import CoreBluetooth;
 
-@interface ViewController : UIViewController <CLLocationManagerDelegate, CBPeripheralManagerDelegate>
+@interface ViewController : UIViewController <CLLocationManagerDelegate, CBPeripheralManagerDelegate, CBCentralManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
