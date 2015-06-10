@@ -52,13 +52,6 @@ enum {
     if ([mLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         [mLocationManager requestWhenInUseAuthorization];
     }
-    
-    // TODO - Add a 30s timer
-    [mLocationManager startUpdatingLocation];
-    
-    // Bluetooth LE
-    mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:@{CBPeripheralManagerOptionShowPowerAlertKey : @1}];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -97,16 +90,17 @@ enum {
     [self updateStatusText:@"peripheralManagerDidUpdateState"];
     
     CBUUID *serviceUUID = [CBUUID UUIDWithString:@"CE5C0BF3-B9B0-4A22-847B-74834A70BB93"];
-    CBUUID *extraUUID = [CBUUID UUIDWithString:@"9999"]; // TODO - Random 16bit number
-    CBUUID *characteristicUUID = [CBUUID UUIDWithString:@"EF72F7D6-D68C-4F5C-8D89-50BEBC66681A"];
-    UInt32 id  = 0xF00F00;
+    CBUUID *extraUUID1 = [CBUUID UUIDWithString:@"01234567"]; // TODO - Random number
+    //CBUUID *extraUUID2 = [CBUUID UUIDWithString:@"89ABCDEF"]; // TODO - Random number
+    //CBUUID *characteristicUUID = [CBUUID UUIDWithString:@"EF72F7D6-D68C-4F5C-8D89-50BEBC66681A"];
+    //UInt32 id  = 0xA0B0C0D0;
     
     // FYI - Setting the service isn't necessary if you're just advertising
     CBMutableService *service = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];
-    CBMutableCharacteristic *characteristic = [[CBMutableCharacteristic alloc] initWithType:characteristicUUID
-        properties:CBCharacteristicPropertyRead value:[[NSData alloc] initWithBytes:&id length:sizeof(id)]
-        permissions:CBAttributePermissionsReadable];
-    service.characteristics = @[characteristic];
+//    CBMutableCharacteristic *characteristic = [[CBMutableCharacteristic alloc] initWithType:characteristicUUID
+//        properties:CBCharacteristicPropertyRead value:[NSData dataWithBytes:&id length:sizeof(id)]
+//        permissions:CBAttributePermissionsReadable];
+//    service.characteristics = @[characteristic];
     
     [mPeripheralManager addService:service];
     
@@ -117,7 +111,7 @@ enum {
             [self updateStatusText:@"peripheralManagerDidUpdateState: Already Avertising"];
         } else {
             [self updateStatusText:@"peripheralManagerDidUpdateState: startAdvertising"];
-            [peripheralManager startAdvertising:@{CBAdvertisementDataServiceUUIDsKey : @[serviceUUID, extraUUID], CBAdvertisementDataLocalNameKey:@"CARD: Testing"}];
+            [peripheralManager startAdvertising:@{CBAdvertisementDataServiceUUIDsKey : @[serviceUUID, extraUUID1], CBAdvertisementDataLocalNameKey:@"CARD: Testing"}];
         }
     } else {
         [self updateStatusText:@"peripheralManagerDidUpdateState: State off"];
@@ -146,11 +140,12 @@ enum {
     [self updateStatusText:[NSString stringWithFormat:@"Action: %ld", (long)sender.tag]];
     
     if (sender.tag == kGeoScanTag) {
-    
+        [mLocationManager startUpdatingLocation];
+        // TODO - stop after 30s
     }
     
     if (sender.tag == kBTLEScanTag) {
-        
+        mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:@{CBPeripheralManagerOptionShowPowerAlertKey : @1}];
     }
 }
 
@@ -159,5 +154,12 @@ enum {
     
 }
 
+- (void)peripheralManager:(CBPeripheralManager *)peripheral didReceiveReadRequest:(CBATTRequest *)request {
+    [self updateStatusText:@"didReceiveReadRequest"];
+  
+//    request.value = [request.characteristic.value
+//                     subdataWithRange:NSMakeRange(request.offset, request.characteristic.value.length - request.offset)];
+//    [mPeripheralManager respondToRequest:request withResult:CBATTErrorSuccess];
+}
 
 @end
