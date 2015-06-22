@@ -44,17 +44,6 @@ enum {
     mText = [NSMutableString stringWithCapacity:100];
     [self updateStatusText:@"Starting..."];
     kServiceUUID = [CBUUID UUIDWithString:@"CE5C0BF3-B9B0-4A22-847B-74834A70BB93"];
-
-    // Location
-    if (mLocationManager == nil) mLocationManager = [[CLLocationManager alloc] init];
-    
-    mLocationManager.delegate = self;
-    mLocationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    mLocationManager.distanceFilter = 10;
-    
-    if ([mLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [mLocationManager requestWhenInUseAuthorization];
-    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -143,18 +132,33 @@ enum {
     [self updateStatusText:[NSString stringWithFormat:@"Action: %ld", (long)sender.tag]];
     
     if (sender.tag == kGeoScanTag) {
+        // Location
+        if (mLocationManager == nil) mLocationManager = [[CLLocationManager alloc] init];
+        
+        mLocationManager.delegate = self;
+        mLocationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        mLocationManager.distanceFilter = 10;
+        
+        if ([mLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [mLocationManager requestWhenInUseAuthorization];
+        }
+        
         [mLocationManager startUpdatingLocation];
         // TODO - stop after 30s
     }
     
     if (sender.tag == kBTLEAdvertiseTag) {
-        mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:@{CBPeripheralManagerOptionShowPowerAlertKey : @1}];
+        if (mPeripheralManager == nil) {
+        mPeripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:@{CBPeripheralManagerOptionShowPowerAlertKey:@YES}];
+        }
     }
     
     if (sender.tag == kBTLEScanTag) {
-        // NB - This is untested, need a device that can act as a beacon
-        mCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:nil];
-        [mCentralManager scanForPeripheralsWithServices:@[kServiceUUID] options:nil];
+        if (mCentralManager == nil) {
+            // NB - This is untested, need a device that can act as a beacon
+            mCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:@{CBCentralManagerOptionShowPowerAlertKey:@YES}];
+            //[mCentralManager scanForPeripheralsWithServices:@[kServiceUUID] options:nil];
+        }
     }
     
 }
@@ -175,16 +179,29 @@ enum {
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     [self updateStatusText:@"didDiscoverPeripheral"];
-    [self updateStatusText:[NSString stringWithFormat:@"didDiscoverPeripheral %@", peripheral.name]];
-    for (CBService *service in peripheral.services) {
-        [self updateStatusText:[NSString stringWithFormat:@"Service: %@", service]];
-    }
-    [mCentralManager stopScan];
+    [self updateStatusText:[NSString stringWithFormat:@"Name: %@", peripheral.name]];
+    [self updateStatusText:[NSString stringWithFormat:@"RSSI: %@", RSSI]];
+    [self updateStatusText:[NSString stringWithFormat:@"Manufacturer Data: %@", advertisementData[CBAdvertisementDataManufacturerDataKey]]];
+    [self updateStatusText:[NSString stringWithFormat:@"Service Data: %@", advertisementData[CBAdvertisementDataServiceDataKey]]];
+    [self updateStatusText:[NSString stringWithFormat:@"UUIDs: %@", advertisementData[CBAdvertisementDataServiceUUIDsKey    ]]];
+    
+//    for (CBService *service in peripheral.services) {
+//        [self updateStatusText:[NSString stringWithFormat:@"Service: %@", service]];
+//    }
+    //TODO Stop scanning after a certain timeout
+    //[mCentralManager stopScan];
 
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     [self updateStatusText:[NSString stringWithFormat:@"centralManagerDidUpdateState: %ld", (long)central.state]];
+    
+    if (central.state == CBCentralManagerStatePoweredOn) {
+        [self updateStatusText:@"centralManager: Powered On"];
+        [self updateStatusText:@"Starting scanning..."];
+        [mCentralManager scanForPeripheralsWithServices:nil options:nil];
+    }
+
 }
 
 @end
